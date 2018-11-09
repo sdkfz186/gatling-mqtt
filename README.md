@@ -20,10 +20,17 @@ Additionally this extended version doesn't take into account connect and disconn
 
     $ git clone https://github.com/thingsboard/gatling-mqtt.git
     $ cd gatling-mqtt
+    
+### Scala
+    $ sudo apt-get remove scala-library scala
+    $ sudo wget http://scala-lang.org/files/archive/scala-2.11.8.deb
+    $ sudo dpkg -i scala-2.11.8.deb
+
+### Install SBT
+    $ curl -L -o sbt.deb http://dl.bintray.com/sbt/debian/sbt-0.13.17.deb
+    $ sudo dpkg -i sbt.deb
 
 ### Creating a jar file
-
-Install [sbt](http://www.scala-sbt.org/) 0.13 if you don't have.
 And create a jar file:
 
     $ sbt assembly

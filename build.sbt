@@ -2,7 +2,7 @@ name := "gatling-mqtt"
 
 version := "0.1.0-SNAPSHOT"
 
-scalaVersion := "2.12.1"
+scalaVersion := "2.11.8"
 
 libraryDependencies ++= Seq(
   "io.gatling" % "gatling-core" % "2.2.3" % "provided",
