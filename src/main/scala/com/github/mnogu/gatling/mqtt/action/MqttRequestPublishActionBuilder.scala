@@ -5,7 +5,7 @@ import com.github.mnogu.gatling.mqtt.request.builder.MqttAttributes
 import io.gatling.core.action.Action
 import io.gatling.core.action.builder.ActionBuilder
 import io.gatling.core.structure.ScenarioContext
-
+import io.gatling.commons.util.DefaultClock
 class MqttRequestPublishActionBuilder(mqttAttributes: MqttAttributes)
   extends ActionBuilder {
 
@@ -20,6 +20,7 @@ class MqttRequestPublishActionBuilder(mqttAttributes: MqttAttributes)
       mqttAttributes,
       coreComponents,
       mqttComponents.mqttProtocol,
+      new DefaultClock(),
       next
     )
   }

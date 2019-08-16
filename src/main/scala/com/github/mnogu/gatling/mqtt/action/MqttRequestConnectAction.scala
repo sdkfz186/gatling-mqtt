@@ -2,7 +2,7 @@ package com.github.mnogu.gatling.mqtt.action
 
 import com.github.mnogu.gatling.mqtt.protocol.MqttProtocol
 import io.gatling.commons.stats.OK
-import io.gatling.commons.util.ClockSingleton._
+import io.gatling.commons.util.DefaultClock
 import io.gatling.commons.validation.Validation
 import io.gatling.core.CoreComponents
 import io.gatling.core.Predef._
@@ -16,6 +16,7 @@ class MqttRequestConnectAction(
   val requestName : Expression[String],
   val coreComponents : CoreComponents,
   val mqttProtocol: MqttProtocol,
+  val clock: DefaultClock,
   val next: Action)
    extends ExitableAction with NameGen {
 
@@ -175,7 +176,7 @@ class MqttRequestConnectAction(
 
       val connection = resolvedMqtt.callbackConnection()
 
-      val requestStartDate = nowMillis
+      val requestStartDate = clock.nowMillis
 
       connection.connect(new Callback[Void] {
         override def onSuccess(void: Void): Unit = {

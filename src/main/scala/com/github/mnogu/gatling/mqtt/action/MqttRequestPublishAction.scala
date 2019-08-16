@@ -3,12 +3,11 @@ package com.github.mnogu.gatling.mqtt.action
 import com.github.mnogu.gatling.mqtt.protocol.MqttProtocol
 import com.github.mnogu.gatling.mqtt.request.builder.MqttAttributes
 import io.gatling.commons.stats.{KO, OK}
-import io.gatling.commons.util.ClockSingleton._
+import io.gatling.commons.util.DefaultClock
 import io.gatling.commons.validation.Validation
 import io.gatling.core.CoreComponents
 import io.gatling.core.action.{Action, ExitableAction}
 import io.gatling.core.session._
-import io.gatling.core.stats.message.ResponseTimings
 import io.gatling.core.util.NameGen
 import org.fusesource.mqtt.client.{Callback, CallbackConnection, QoS}
 
@@ -16,8 +15,10 @@ class MqttRequestPublishAction(
   val mqttAttributes: MqttAttributes,
   val coreComponents : CoreComponents,
   val mqttProtocol: MqttProtocol,
+  val clock: DefaultClock,
   val next: Action)
    extends ExitableAction with NameGen {
+
 
   val statsEngine = coreComponents.statsEngine
 
@@ -50,7 +51,8 @@ class MqttRequestPublishAction(
       session: Session): Validation[Unit] = {
 
     payload(session).map { resolvedPayload =>
-      val requestStartDate = nowMillis
+
+      val requestStartDate = clock.nowMillis
 
       connection.publish(
         topic, resolvedPayload.getBytes, qos, retain, new Callback[Void] {
@@ -61,12 +63,14 @@ class MqttRequestPublishAction(
             writeData(isSuccess = true, None)
 
           private def writeData(isSuccess: Boolean, message: Option[String]) = {
-            val requestEndDate = nowMillis
+            val requestEndDate = clock.nowMillis
 
             statsEngine.logResponse(
               session,
               requestName,
-              ResponseTimings(startTimestamp = requestStartDate, endTimestamp = requestEndDate),
+              //ResponseTimings(startTimestamp = requestStartDate, endTimestamp = requestEndDate),
+              requestStartDate,
+              requestEndDate,
               if (isSuccess) OK else KO,
               None,
               message

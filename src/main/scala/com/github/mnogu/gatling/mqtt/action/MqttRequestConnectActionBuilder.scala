@@ -1,6 +1,7 @@
 package com.github.mnogu.gatling.mqtt.action
 
 import com.github.mnogu.gatling.mqtt.protocol.{MqttComponents, MqttProtocol}
+import io.gatling.commons.util.DefaultClock
 import io.gatling.core.action.Action
 import io.gatling.core.action.builder.ActionBuilder
 import io.gatling.core.session._
@@ -20,6 +21,7 @@ class MqttRequestConnectActionBuilder(requestName: Expression[String])
       requestName,
       coreComponents,
       mqttComponents.mqttProtocol,
+      new DefaultClock(),
       next
     )
   }

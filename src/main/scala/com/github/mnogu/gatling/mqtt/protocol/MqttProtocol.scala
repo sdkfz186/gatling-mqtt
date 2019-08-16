@@ -7,6 +7,8 @@ import io.gatling.core.protocol.{Protocol, ProtocolKey}
 import io.gatling.core.session.Expression
 import org.fusesource.mqtt.client.QoS
 
+import scala.concurrent.java8.FuturesConvertersImpl.P
+
 object MqttProtocol {
 
   def apply(configuration: GatlingConfiguration): MqttProtocol = MqttProtocol(
@@ -36,16 +38,16 @@ object MqttProtocol {
       maxReadRate = None,
       maxWriteRate = None))
 
-  val MqttProtocolKey = new ProtocolKey {
+  val MqttProtocolKey = new ProtocolKey[MqttProtocol,MqttComponents]{
 
     type Protocol = MqttProtocol
     type Components = MqttComponents
 
     def protocolClass: Class[io.gatling.core.protocol.Protocol] = classOf[MqttProtocol].asInstanceOf[Class[io.gatling.core.protocol.Protocol]]
 
-    def defaultProtocolValue(configuration: GatlingConfiguration): MqttProtocol = MqttProtocol(configuration)
+   def defaultProtocolValue(configuration: GatlingConfiguration): MqttProtocol = MqttProtocol(configuration)
 
-    def newComponents(system: ActorSystem, coreComponents: CoreComponents): MqttProtocol => MqttComponents = {
+    def newComponents(coreComponents: CoreComponents): MqttProtocol => MqttComponents = {
 
       mqttProdocol => {
         val mqttComponents = MqttComponents (
@@ -55,6 +57,8 @@ object MqttProtocol {
         mqttComponents
       }
     }
+
+
   }
 }
 
